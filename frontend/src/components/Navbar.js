@@ -1,21 +1,28 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Navbar.css";
 
-const Navbar = () => {
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+const Navbar = ({ setUser }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
     localStorage.removeItem("user");
-    window.location = "/";
+    setUser(null); // ✅ immediately update App.js state
+    navigate("/"); // ✅ redirect to login instantly
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", background: "#ddd", padding: "10px" }}>
-      <h3>🎬 Movie Ticket Booking</h3>
-      <div>
-        <a href="/home" style={{ marginRight: "15px" }}>Home</a>
-        <a href="/bookings" style={{ marginRight: "15px" }}>Bookings</a>
-        <button onClick={handleLogout}>Logout</button>
+    <nav className="navbar">
+      <div className="navbar-left">
+        <span className="logo">🎬 Movie Ticket Booking</span>
       </div>
-    </div>
+
+      <div className="navbar-right">
+        <Link to="/home" className="nav-btn">Home</Link>
+        <Link to="/bookings" className="nav-btn">Bookings</Link>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+      </div>
+    </nav>
   );
 };
 

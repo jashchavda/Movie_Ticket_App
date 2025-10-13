@@ -53,5 +53,5 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("Logged out successfully");
-    }
+     }
 }

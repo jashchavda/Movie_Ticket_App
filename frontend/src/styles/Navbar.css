@@ -1,0 +1,75 @@
+/* Navbar.css */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #141414, #1e1e1e);
+  padding: 12px 40px;
+  color: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid #ffcc00;
+}
+
+.logo {
+  font-size: 1.5rem; /* 🔹 Slightly bigger title */
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffcc00;
+  text-shadow: 1px 1px 3px rgba(255, 204, 0, 0.5);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-btn,
+.logout-btn {
+  background-color: transparent;
+  border: 2px solid #ffcc00;
+  color: #ffcc00;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav-btn:hover,
+.logout-btn:hover {
+  background-color: #ffcc00;
+  color: #141414;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
+  background-color: #ff4444;
+  border-color: #ff4444;
+  color: #fff;
+}
+
+.logout-btn:hover {
+  background-color: #ff6666;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .navbar-right {
+    gap: 10px;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+}

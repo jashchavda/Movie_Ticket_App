@@ -1,0 +1,61 @@
+/* Home.css — fixed cinematic version */
+
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  background: url("/public/images/home-bg.jpeg") no-repeat center center/cover;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Overlay only for contrast — but NOT blocking clicks */
+.home-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* lightened from 0.7 to keep clarity */
+  z-index: 0;
+  pointer-events: none; /* ✅ allows you to click through */
+}
+
+/* Keep your content above the overlay */
+.home-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.home-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #ffcc00; /* clean gold without shine */
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* simple shadow for contrast */
+  position: relative;
+  z-index: 2; /* keeps it above the overlay */
+}
+
+
+
+
+/* Grid layout for movie cards */
+.movie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 20px;
+  z-index: 1;
+}

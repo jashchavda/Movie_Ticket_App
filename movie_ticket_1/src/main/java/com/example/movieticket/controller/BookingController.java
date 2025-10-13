@@ -31,6 +31,7 @@ public class BookingController {
 
         Long movieId = Long.valueOf(String.valueOf(body.get("movieId")));
         Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
+        String showTime = (String) body.get("showTime"); // ✅ Get timing from frontend
 
         User user = userRepo.findById(userId).get();
         Movie movie = movieRepo.findById(movieId).get();
@@ -39,6 +40,7 @@ public class BookingController {
         booking.setUser(user);
         booking.setMovie(movie);
         booking.setSeats(seats);
+        booking.setShowTime(showTime); // ✅ Save timing
         booking.setTotalPrice(movie.getPrice() * seats);
 
         bookingRepo.save(booking);
@@ -62,8 +64,15 @@ public class BookingController {
         if (booking == null) return ResponseEntity.notFound().build();
 
         Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
+        String showTime = (String) body.get("showTime"); // ✅ handle updates too
+
         booking.setSeats(seats);
         booking.setTotalPrice(booking.getMovie().getPrice() * seats);
+
+        if (showTime != null && !showTime.isEmpty()) {
+            booking.setShowTime(showTime);
+        }
+
         bookingRepo.save(booking);
         return ResponseEntity.ok(booking);
     }

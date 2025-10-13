@@ -1,0 +1,73 @@
+/* BookingsPage.css */
+
+.bookings-container {
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.bookings-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.booking-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 15px auto;
+  padding: 20px;
+  width: 360px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.booking-card h3 {
+  margin: 0;
+  color: #222;
+  font-size: 1.2rem;
+}
+
+.booking-card p {
+  margin: 8px 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.booking-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.update-btn,
+.cancel-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.update-btn {
+  background-color: #007bff;
+}
+
+.update-btn:hover {
+  background-color: #0056b3;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+}
+
+.cancel-btn:hover {
+  background-color: #b22a36;
+}

@@ -2,7 +2,6 @@ package com.example.movieticket.model;
 
 import jakarta.persistence.*;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,34 +22,24 @@ public class Booking {
 
     @Setter
     private Integer seats;
+
     @Setter
     private Double totalPrice;
+
+    // ✅ New field to store show timing
+    @Setter
+    private String showTime;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Booking() {}
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public Integer getSeats() {
-        return seats;
-    }
-
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    // Getters
+    public Long getId() { return id; }
+    public User getUser() { return user; }
+    public Movie getMovie() { return movie; }
+    public Integer getSeats() { return seats; }
+    public Double getTotalPrice() { return totalPrice; }
+    public String getShowTime() { return showTime; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }

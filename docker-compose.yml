@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: movie-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Mysql.01
+      MYSQL_DATABASE: movieticketdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./movie_ticket_1    # ✅ your backend folder where pom.xml exists
+      dockerfile: Dockerfile
+    container_name: movie-backend
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/movieticketdb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Mysql.01
+    ports:
+      - "8080:8080"
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend           # ✅ React app folder
+      dockerfile: Dockerfile
+    container_name: movie-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"                   # ✅ Expose app on localhost:3000
+    environment:
+      - REACT_APP_API_URL=http://movie-backend:8080  # ✅ Let React talk to backend container
+    restart: always
+
+volumes:
+  mysql_data:

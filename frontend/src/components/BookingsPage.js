@@ -1,40 +1,66 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../styles/BookingsPage.css";
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
 
   const fetchBookings = async () => {
-    const res = await axios.get("/api/bookings", { withCredentials: true });
-    setBookings(res.data);
+    try {
+      const res = await axios.get("/api/bookings", { withCredentials: true });
+      setBookings(res.data);
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+    }
   };
 
   useEffect(() => {
     fetchBookings();
   }, []);
 
-  const updateSeats = async (id, seats) => {
-    await axios.put(`/api/bookings/${id}`, { seats }, { withCredentials: true });
-    fetchBookings();
-  };
-
   const cancelBooking = async (id) => {
-    await axios.delete(`/api/bookings/${id}`, { withCredentials: true });
-    fetchBookings();
+    try {
+      await axios.delete(`/api/bookings/${id}`, { withCredentials: true });
+      fetchBookings();
+    } catch (err) {
+      console.error("Error cancelling booking:", err);
+    }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="bookings-container">
       <h2>Your Bookings</h2>
       {bookings.length === 0 && <p>No bookings yet.</p>}
+
       {bookings.map((b) => (
-        <div key={b.id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
+        <div key={b.id} className="booking-card">
           <h3>{b.movie.title}</h3>
           <p>Seats: {b.seats}</p>
           <p>Total Price: ₹{b.totalPrice}</p>
-          <button onClick={() => updateSeats(b.id, b.seats + 1)}>+ Seat</button>
-          <button onClick={() => updateSeats(b.id, b.seats - 1)} disabled={b.seats <= 1}>- Seat</button>
-          <button onClick={() => cancelBooking(b.id)}>Cancel</button>
+          {/* ✅ Show booked timing */}
+          {b.showTime && <p>Show Time: {b.showTime}</p>}
+
+          <div className="booking-buttons">
+            <button
+              className="update-btn"
+              onClick={() =>
+                navigate(`/book/${b.movie.id}/edit/${b.id}`, {
+                  state: { movie: b.movie, currentSeats: b.seats },
+                })
+              }
+            >
+              Update
+            </button>
+
+            <button
+              className="cancel-btn"
+              onClick={() => cancelBooking(b.id)}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       ))}
     </div>

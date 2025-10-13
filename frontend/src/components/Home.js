@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
+import "../styles/Home.css"; // ✅ Added CSS import
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
@@ -10,9 +11,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2 style={{ textAlign: "center" }}>Available Movies</h2>
-      <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
+    <div className="home-container">
+      <h2 className="home-title">Available Movies 🎬</h2>
+
+      <div className="movie-grid">
         {movies.map((m) => (
           <MovieCard key={m.id} movie={m} />
         ))}
