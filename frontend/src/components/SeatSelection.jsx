@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/SeatSelection.css";
 
-const ROWS = 8; // seats layout (simple)
+const ROWS = 8;
 const COLS = 12;
 
 export default function SeatSelection() {
@@ -19,19 +19,13 @@ export default function SeatSelection() {
   const [loading, setLoading] = useState(!passedMovie);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-
-  // ✅ New state to store the selected show timing
   const [showTime, setShowTime] = useState("");
 
-  // Predefined available show times
+  
   const availableTimes = ["09:00 AM", "12:30 PM", "03:00 PM", "06:45 PM", "09:15 PM"];
 
-  // Build seat ids 1..N once
-  const allSeatIds = useMemo(() => {
-    return Array.from({ length: ROWS * COLS }, (_, i) => i + 1);
-  }, []);
+  const allSeatIds = useMemo(() => Array.from({ length: ROWS * COLS }, (_, i) => i + 1), []);
 
-  // Fetch movie if not passed from previous page
   useEffect(() => {
     if (movie) return;
     (async () => {
@@ -47,19 +41,21 @@ export default function SeatSelection() {
     })();
   }, [movie, movieId]);
 
-  // Preselect seats if updating
-  useEffect(() => {
-    if (currentSeats > 0) {
-      const s = new Set(allSeatIds.slice(0, currentSeats));
-      setSelected(s);
-    }
-  }, [currentSeats, allSeatIds]);
-
   const toggleSeat = (id) => {
     const s = new Set(selected);
     if (s.has(id)) s.delete(id);
     else s.add(id);
     setSelected(s);
+  };
+
+  const getSeatLabels = () => {
+    return Array.from(selected)
+      .map((id) => {
+        const row = String.fromCharCode(65 + Math.floor((id - 1) / COLS));
+        const col = ((id - 1) % COLS) + 1;
+        return `${row}${col}`;
+      })
+      .join(", ");
   };
 
   const totalPrice = movie ? selected.size * Number(movie.price) : 0;
@@ -75,21 +71,21 @@ export default function SeatSelection() {
       return;
     }
 
+    const seatNumbers = getSeatLabels();
     setSubmitting(true);
+
     try {
       if (bookingId) {
-        // Update existing booking
         await axios.put(
           `/api/bookings/${bookingId}`,
-          { seats: selected.size, showTime },
+          { seats: selected.size, showTime, seatNumbers },
           { withCredentials: true }
         );
         alert("Booking updated!");
       } else {
-        // Create new booking with showTime
         await axios.post(
           "/api/bookings",
-          { movieId: movie.id, seats: selected.size, showTime },
+          { movieId: movie.id, seats: selected.size, showTime, seatNumbers },
           { withCredentials: true }
         );
         alert("Booking confirmed!");
@@ -97,6 +93,7 @@ export default function SeatSelection() {
       navigate("/bookings");
     } catch (e) {
       alert("Error saving booking.");
+      console.error(e);
     } finally {
       setSubmitting(false);
     }
@@ -107,18 +104,13 @@ export default function SeatSelection() {
 
   return (
     <div className="seat-page">
-      <div className="movie-header">
-        <img src={movie.imageUrl} alt={movie.title} className="poster" />
-        <div className="movie-info">
-          <h1 className="title">{movie.title}</h1>
-          <p className="meta"><strong>Price:</strong> ₹{movie.price}</p>
-          <p className="meta"><strong>Rating:</strong> ⭐ {movie.rating}</p>
-        </div>
-      </div>
+      <h2 className="choose-title">Choose Your Seats</h2>
 
-      {/* ✅ Show time selection */}
+      <div className="screen">SCREEN</div>
+
+      
       <div className="time-selection">
-        <h3>Select Show Time:</h3>
+        <h4>Select Show Time:</h4>
         <div className="time-options">
           {availableTimes.map((time) => (
             <button
@@ -132,32 +124,32 @@ export default function SeatSelection() {
         </div>
       </div>
 
-      <h2 className="choose-title">Choose your seats by clicking on the available seats</h2>
-
-      <div className="screen">SCREEN</div>
-
       <div className="seats-grid" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}>
-        {allSeatIds.map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={`seat ${selected.has(id) ? "selected" : ""}`}
-            onClick={() => toggleSeat(id)}
-          >
-            {/* Seat button */}
-          </button>
-        ))}
+        {allSeatIds.map((id) => {
+          const label = String.fromCharCode(65 + Math.floor((id - 1) / COLS)) + (((id - 1) % COLS) + 1);
+          const isReserved = ["A5", "B3", "C2", "C11", "D9", "E10", "G10", "H11"].includes(label);
+          return (
+            <button
+              key={id}
+              type="button"
+              className={`seat ${selected.has(id) ? "selected" : ""} ${isReserved ? "reserved" : ""}`}
+              onClick={() => !isReserved && toggleSeat(id)}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="legend">
         <span><span className="dot available" /> Available</span>
         <span><span className="dot selected" /> Selected</span>
+        <span><span className="dot reserved" /> Reserved</span>
       </div>
 
       <div className="footer">
         <p>
-          You have selected <strong>{selected.size}</strong> seat(s)
-          {selected.size > 0 && <> — total <strong>₹{totalPrice}</strong></>}
+          Selected seats: <strong>{selected.size}</strong> | Total: ₹{totalPrice}
         </p>
         <button className="confirm-btn" onClick={handleConfirm} disabled={submitting || selected.size === 0}>
           {bookingId ? "Update Booking" : "Confirm Booking"}

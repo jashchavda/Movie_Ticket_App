@@ -1,13 +1,13 @@
-/* 🎬 MovieCard.css — Premium Cinematic Black-Gold  Theme */
+
 
 .movie-card-container {
-  background: rgba(0, 0, 0, 0.8); /* rich dark overlay */
+  background: rgba(0, 0, 0, 0.8); 
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 12px;
   padding: 16px;
   width: 250px;
   text-align: center;
-  color: #ffffff; /* all text white by default */
+  color: #ffffff; 
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease;
 }
@@ -15,10 +15,10 @@
 .movie-card-container:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 18px rgba(255, 204, 0, 0.4);
-  border-color: rgba(255, 204, 0, 0.6); /* subtle gold border glow */
+  border-color: rgba(255, 204, 0, 0.6); 
 }
 
-/* 🎞️ Movie Poster */
+
 .movie-card-container img {
   border-radius: 10px;
   width: 200px;
@@ -33,16 +33,16 @@
   transform: scale(1.03);
 }
 
-/* 🎬 Movie Title */
+
 .movie-card-container h3 {
   font-size: 1.25rem;
   font-weight: 700;
   margin: 6px 0;
-  color: #ffcc00; /* golden yellow accent */
+  color: #ffcc00; 
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* 🎟️ Movie Info (Rating, Price, etc.) */
+
 .movie-card-container p {
   margin: 4px 0;
   color: #f5f5f5;
@@ -50,12 +50,12 @@
   line-height: 1.4;
 }
 
-/* 💫 Optional: Golden Star Icon */
+
 .movie-card-container p span {
-  color: #ffcc00; /* makes the star icon yellow */
+  color: #ffcc00; 
 }
 
-/* 🎫 Book Button */
+
 .movie-card-container button {
   background-color: #ffcc00;
   color: #000;
@@ -74,7 +74,7 @@
   box-shadow: 0 4px 10px rgba(255, 204, 0, 0.4);
 }
 
-/* 🎥 Smooth Transitions for Elements */
+
 .movie-card-container h3,
 .movie-card-container p,
 .movie-card-container button {

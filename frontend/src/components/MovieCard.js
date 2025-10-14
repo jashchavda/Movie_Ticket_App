@@ -1,4 +1,4 @@
-// src/components/MovieCard.js
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/MovieCard.css";
@@ -11,7 +11,7 @@ const MovieCard = ({ movie }) => {
   };
 
   return (
-    <div className="movie-card-container"> {/* ⬅️ use class, no inline styles */}
+    <div className="movie-card-container"> 
       <img
         src={movie.imageUrl}
         alt={movie.title}

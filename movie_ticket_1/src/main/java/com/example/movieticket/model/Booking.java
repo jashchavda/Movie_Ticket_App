@@ -26,15 +26,22 @@ public class Booking {
     @Setter
     private Double totalPrice;
 
-    // ✅ New field to store show timing
     @Setter
     private String showTime;
+
+
+    @Setter
+    @Column(name = "seat_numbers", length = 255)
+    private String seatNumbers;
+
+    public String getSeatNumbers() {
+        return seatNumbers;
+    }
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Booking() {}
 
-    // Getters
     public Long getId() { return id; }
     public User getUser() { return user; }
     public Movie getMovie() { return movie; }

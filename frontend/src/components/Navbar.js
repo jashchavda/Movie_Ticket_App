@@ -7,8 +7,8 @@ const Navbar = ({ setUser }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null); // ✅ immediately update App.js state
-    navigate("/"); // ✅ redirect to login instantly
+    setUser(null); 
+    navigate("/"); 
   };
 
   return (

@@ -37,10 +37,28 @@ const BookingsPage = () => {
       {bookings.map((b) => (
         <div key={b.id} className="booking-card">
           <h3>{b.movie.title}</h3>
-          <p>Seats: {b.seats}</p>
-          <p>Total Price: ₹{b.totalPrice}</p>
-          {/* ✅ Show booked timing */}
-          {b.showTime && <p>Show Time: {b.showTime}</p>}
+
+          <div className="booking-info">
+            <p><strong>Seats:</strong> {b.seats}</p>
+
+            
+            {b.seatNumbers && (
+              <p style={{ color: "#444", fontWeight: 500 }}>
+                <strong>Seat Numbers:</strong> {b.seatNumbers}
+              </p>
+            )}
+
+            
+            {b.showTime && (
+              <p>
+                <strong>Show Time:</strong> {b.showTime}
+              </p>
+            )}
+
+            <p>
+              <strong>Total Price:</strong> ₹{b.totalPrice}
+            </p>
+          </div>
 
           <div className="booking-buttons">
             <button

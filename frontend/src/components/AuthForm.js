@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/AuthForm.css";
 
-// ✅ Use Docker-aware environment variable
+
 axios.defaults.baseURL = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
 const AuthForm = () => {

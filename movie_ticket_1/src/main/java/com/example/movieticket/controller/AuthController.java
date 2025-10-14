@@ -21,12 +21,12 @@ public class AuthController {
         String username = body.get("username");
         String password = body.get("password");
 
-        // check if user already exists
+
         if (userRepo.findByUsername(username).isPresent()) {
             return ResponseEntity.badRequest().body("User already exists");
         }
 
-        // save new user
+
         User user = new User(username, password);
         userRepo.save(user);
 
@@ -43,7 +43,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 
-        // Save logged-in user ID in session
+
         session.setAttribute("userId", userOpt.get().getId());
 
         return ResponseEntity.ok(userOpt.get());

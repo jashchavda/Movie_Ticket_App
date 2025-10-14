@@ -12,9 +12,9 @@ public class DataSeeder {
     @Bean
     CommandLineRunner initDatabase(MovieRepository movieRepository) {
         return args -> {
-            // Only seed if no movies exist
+
             if (movieRepository.count() == 0) {
-                // ✅ Local images for all movies
+
                 movieRepository.save(new Movie(
                         "The Great Escape",
                         120.0,
@@ -43,9 +43,9 @@ public class DataSeeder {
                         "http://localhost:8080/images/martian.jpeg"
                 ));
 
-                System.out.println("✅ Default movies seeded successfully with local images!");
+                System.out.println("Default movies seeded successfully with local images!");
             } else {
-                System.out.println("ℹ️ Movies already exist — skipping seeding.");
+                System.out.println(" Movies already exist — skipping seeding.");
             }
         };
     }
