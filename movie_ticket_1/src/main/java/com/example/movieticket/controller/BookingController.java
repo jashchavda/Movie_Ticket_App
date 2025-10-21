@@ -1,5 +1,4 @@
 package com.example.movieticket.controller;
-
 import com.example.movieticket.model.*;
 import com.example.movieticket.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class BookingController {
         Long movieId = Long.valueOf(String.valueOf(body.get("movieId")));
         Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
         String showTime = (String) body.get("showTime");
-        String seatNumbers = (String) body.get("seatNumbers");
+
 
         User user = userRepo.findById(userId).get();
         Movie movie = movieRepo.findById(movieId).get();
@@ -42,8 +41,11 @@ public class BookingController {
         booking.setMovie(movie);
         booking.setSeats(seats);
         booking.setShowTime(showTime);
-        booking.setSeatNumbers(seatNumbers);
         booking.setTotalPrice(movie.getPrice() * seats);
+
+
+
+
 
         bookingRepo.save(booking);
         return ResponseEntity.ok(booking);
@@ -64,27 +66,22 @@ public class BookingController {
     public ResponseEntity<?> updateBooking(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Booking booking = bookingRepo.findById(id).orElse(null);
         if (booking == null) return ResponseEntity.notFound().build();
-
         Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
         String showTime = (String) body.get("showTime");
-        String seatNumbers = (String) body.get("seatNumbers");
 
         booking.setSeats(seats);
         booking.setTotalPrice(booking.getMovie().getPrice() * seats);
         if (showTime != null && !showTime.isEmpty()) booking.setShowTime(showTime);
-        if (seatNumbers != null && !seatNumbers.isEmpty()) booking.setSeatNumbers(seatNumbers);
+
 
         bookingRepo.save(booking);
         return ResponseEntity.ok(booking);
     }
-
-
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
         bookingRepo.deleteById(id);
         return ResponseEntity.ok("Booking cancelled");
     }
+
 }

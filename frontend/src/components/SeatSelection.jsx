@@ -39,7 +39,7 @@ export default function SeatSelection() {
         setLoading(false);
       }
     })();
-  }, [movie, movieId]);
+  }, [movie, movieId]); 
 
   const toggleSeat = (id) => {
     const s = new Set(selected);

@@ -19,7 +19,7 @@ const Home = () => {
           <MovieCard key={m.id} movie={m} />
         ))}
       </div>
-    </div>
+    </div>  
   );
 };
 

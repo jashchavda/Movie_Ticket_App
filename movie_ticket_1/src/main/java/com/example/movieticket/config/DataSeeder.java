@@ -19,29 +19,35 @@ public class DataSeeder {
                         "The Great Escape",
                         120.0,
                         4.3,
-                        "http://localhost:8080/images/the-great-escape.jpeg"
+                        "http://localhost:8080/images/the-great-escape.jpeg",
+                        "Hindi"
                 ));
 
                 movieRepository.save(new Movie(
                         "Space Odyssey",
                         150.0,
                         4.7,
-                        "http://localhost:8080/images/space-odyssey.jpeg"
+                        "http://localhost:8080/images/space-odyssey.jpeg",
+                        "English"
                 ));
 
                 movieRepository.save(new Movie(
                         "Skyfall",
                         100.0,
                         4.0,
-                        "http://localhost:8080/images/skyfall.jpeg"
+                        "http://localhost:8080/images/skyfall.jpeg",
+                        "Sanskrit"
                 ));
 
                 movieRepository.save(new Movie(
                         "Martian",
                         130.0,
                         4.6,
-                        "http://localhost:8080/images/martian.jpeg"
+                        "http://localhost:8080/images/martian.jpeg",
+                        "Marathi"
                 ));
+
+
 
                 System.out.println("Default movies seeded successfully with local images!");
             } else {

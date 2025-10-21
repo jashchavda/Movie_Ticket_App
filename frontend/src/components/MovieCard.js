@@ -22,6 +22,7 @@ const MovieCard = ({ movie }) => {
       <h3>{movie.title}</h3>
       <p>Price: ₹{movie.price}</p>
       <p>Rating: ⭐{movie.rating}</p>
+      <p>Language: {movie.language}</p>
       <button onClick={handleBook}>Book</button>
     </div>
   );

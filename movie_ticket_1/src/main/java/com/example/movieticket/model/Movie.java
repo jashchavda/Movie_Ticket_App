@@ -20,16 +20,20 @@ public class Movie {
     @Setter
     private String imageUrl;
 
+    @Setter
+    private String language ;
+
     public Movie() {}
 
-    public Movie(String title, Double price, Double rating, String imageUrl) {
+    public Movie(String title, Double price, Double rating, String imageUrl, String language) {
         this.title = title;
         this.price = price;
         this.rating = rating;
         this.imageUrl = imageUrl;
+        this.language = language ;
     }
 
-    // Getters and Setters
+     // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -47,5 +51,9 @@ public class Movie {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getLanguage() {
+        return language ;
     }
 }

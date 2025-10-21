@@ -5,7 +5,9 @@ import "../styles/Navbar.css";
 const Navbar = ({ setUser }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = () => { 
+
+    
     localStorage.removeItem("user");
     setUser(null); 
     navigate("/"); 

@@ -3,6 +3,7 @@ package com.example.movieticket.controller;
 import com.example.movieticket.model.Movie;
 import com.example.movieticket.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -22,5 +23,19 @@ public class MovieController {
     @PostMapping
     public Movie addMovie(@RequestBody Movie movie) {
         return movieRepo.save(movie);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?>  selectMovie(@PathVariable Long id) {
+
+            Movie movie = movieRepo.findById(id).orElse(null);
+           if(movie == null) {
+               return ResponseEntity.notFound().build();
+           }
+
+           return ResponseEntity.ok(movieRepo.findById(id).get().getLanguage());
+
+
+
     }
 }

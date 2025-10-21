@@ -25,10 +25,10 @@ const AuthForm = () => {
         setIsLogin(true);
       }
     } catch (err) {
-      const msg = err.response?.data || "❌ Something went wrong";
+      const msg = err.response?.data || " Something went wrong";
 
       if (msg.toLowerCase().includes("invalid")) {
-        alert("❌ Wrong password! Try again.");
+        alert("Wrong password! Try again.");
       }
 
       setMessage(msg);

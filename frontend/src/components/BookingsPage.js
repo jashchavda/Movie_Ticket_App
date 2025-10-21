@@ -41,14 +41,6 @@ const BookingsPage = () => {
           <div className="booking-info">
             <p><strong>Seats:</strong> {b.seats}</p>
 
-            
-            {b.seatNumbers && (
-              <p style={{ color: "#444", fontWeight: 500 }}>
-                <strong>Seat Numbers:</strong> {b.seatNumbers}
-              </p>
-            )}
-
-            
             {b.showTime && (
               <p>
                 <strong>Show Time:</strong> {b.showTime}
