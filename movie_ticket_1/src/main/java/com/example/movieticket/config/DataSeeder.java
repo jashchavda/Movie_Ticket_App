@@ -2,57 +2,60 @@ package com.example.movieticket.config;
 
 import com.example.movieticket.model.Movie;
 import com.example.movieticket.repository.MovieRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
+@Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class DataSeeder {
 
     @Bean
     CommandLineRunner initDatabase(MovieRepository movieRepository) {
         return args -> {
-
-            if (movieRepository.count() == 0) {
-
-                movieRepository.save(new Movie(
-                        "The Great Escape",
-                        120.0,
-                        4.3,
-                        "http://localhost:8080/images/the-great-escape.jpeg",
-                        "Hindi"
-                ));
-
-                movieRepository.save(new Movie(
-                        "Space Odyssey",
-                        150.0,
-                        4.7,
-                        "http://localhost:8080/images/space-odyssey.jpeg",
-                        "English"
-                ));
-
-                movieRepository.save(new Movie(
-                        "Skyfall",
-                        100.0,
-                        4.0,
-                        "http://localhost:8080/images/skyfall.jpeg",
-                        "Sanskrit"
-                ));
-
-                movieRepository.save(new Movie(
-                        "Martian",
-                        130.0,
-                        4.6,
-                        "http://localhost:8080/images/martian.jpeg",
-                        "Marathi"
-                ));
-
-
-
-                System.out.println("Default movies seeded successfully with local images!");
-            } else {
-                System.out.println(" Movies already exist — skipping seeding.");
+            if (movieRepository.count() > 0) {
+                log.info("Movies already seeded — skipping.");
+                return;
             }
+
+            List<Movie> movies = List.of(
+                    Movie.builder()
+                            .title("The Great Escape")
+                            .price(120.0)
+                            .rating(4.3)
+                            .imageUrl("http://localhost:8080/images/the-great-escape.jpeg")
+                            .language("Hindi")
+                            .build(),
+                    Movie.builder()
+                            .title("Space Odyssey")
+                            .price(150.0)
+                            .rating(4.7)
+                            .imageUrl("http://localhost:8080/images/space-odyssey.jpeg")
+                            .language("English")
+                            .build(),
+                    Movie.builder()
+                            .title("Skyfall")
+                            .price(100.0)
+                            .rating(4.0)
+                            .imageUrl("http://localhost:8080/images/skyfall.jpeg")
+                            .language("English")
+                            .build(),
+                    Movie.builder()
+                            .title("Martian")
+                            .price(130.0)
+                            .rating(4.6)
+                            .imageUrl("http://localhost:8080/images/martian.jpeg")
+                            .language("English")
+                            .build()
+            );
+
+            movieRepository.saveAll(movies);
+            log.info("Seeded {} movies successfully.", movies.size());
         };
     }
 }

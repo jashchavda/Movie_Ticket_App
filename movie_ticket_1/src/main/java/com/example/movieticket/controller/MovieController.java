@@ -1,41 +1,42 @@
 package com.example.movieticket.controller;
 
-import com.example.movieticket.model.Movie;
-import com.example.movieticket.repository.MovieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.movieticket.dto.response.MovieResponse;
+import com.example.movieticket.service.MovieService;
+import com.example.movieticket.util.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/movies")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class MovieController {
 
-    @Autowired
-    private MovieRepository movieRepo;
+    private final MovieService movieService;
 
     @GetMapping
-    public List<Movie> getAllMovies() {
-        return movieRepo.findAll();
-    }
-
-    @PostMapping
-    public Movie addMovie(@RequestBody Movie movie) {
-        return movieRepo.save(movie);
+    public ResponseEntity<ApiResponse<List<MovieResponse>>> getAllMovies() {
+        return ResponseEntity.ok(ApiResponse.success("Movies fetched", movieService.getAllMovies()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?>  selectMovie(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<MovieResponse>> getMovieById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success("Movie found", movieService.getMovieById(id)));
+    }
 
-            Movie movie = movieRepo.findById(id).orElse(null);
-           if(movie == null) {
-               return ResponseEntity.notFound().build();
-           }
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<MovieResponse>>> search(
+            @RequestParam String keyword) {
+        return ResponseEntity.ok(
+                ApiResponse.success("Search results", movieService.searchByTitle(keyword)));
+    }
 
-           return ResponseEntity.ok(movieRepo.findById(id).get().getLanguage());
-
-
-
+    @GetMapping("/language/{language}")
+    public ResponseEntity<ApiResponse<List<MovieResponse>>> getByLanguage(
+            @PathVariable String language) {
+        return ResponseEntity.ok(
+                ApiResponse.success("Movies by language", movieService.getMoviesByLanguage(language)));
     }
 }

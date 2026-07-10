@@ -1,57 +1,59 @@
 package com.example.movieticket.controller;
 
-import com.example.movieticket.model.User;
-import com.example.movieticket.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import com.example.movieticket.dto.request.LoginRequest;
+import com.example.movieticket.dto.request.RegisterRequest;
+import com.example.movieticket.dto.response.UserResponse;
+import com.example.movieticket.service.AuthService;
+import com.example.movieticket.util.ApiResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepo;
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<ApiResponse<UserResponse>> register(
+            @Valid @RequestBody RegisterRequest request) {
 
-
-        if (userRepo.findByUsername(username).isPresent()) {
-            return ResponseEntity.badRequest().body("User already exists");
-        }
-
-
-        User user = new User(username, password);
-        userRepo.save(user);
-
-        return ResponseEntity.ok("Registered successfully");
+        UserResponse user = authService.register(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Registered successfully", user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> body, HttpSession session) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<ApiResponse<UserResponse>> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpSession session) {
 
-        Optional<User> userOpt = userRepo.findByUsername(username);
-        if (userOpt.isEmpty() || !userOpt.get().getPassword().equals(password)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        }
-
-
-        session.setAttribute("userId", userOpt.get().getId());
-
-        return ResponseEntity.ok(userOpt.get());
+        UserResponse user = authService.login(request);
+        session.setAttribute("userId", user.getId());
+        return ResponseEntity.ok(ApiResponse.success("Login successful", user));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
+    public ResponseEntity<ApiResponse<Void>> logout(HttpSession session) {
         session.invalidate();
-        return ResponseEntity.ok("Logged out successfully");
-     }
+        return ResponseEntity.ok(ApiResponse.success("Logged out successfully"));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.failure("Not authenticated"));
+        }
+        UserResponse user = new UserResponse(authService.findById(userId));
+        return ResponseEntity.ok(ApiResponse.success("Current user", user));
+    }
 }

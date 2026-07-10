@@ -1,59 +1,47 @@
 package com.example.movieticket.model;
 
 import jakarta.persistence.*;
-import lombok.Setter;
+import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "movies")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
+    @Column(nullable = false)
     private String title;
-    @Setter
+
+    @Column(nullable = false)
     private Double price;
-    @Setter
+
     private Double rating;
-    @Setter
+
     private String imageUrl;
 
-    @Setter
-    private String language ;
+    private String language;
 
-    public Movie() {}
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public Movie(String title, Double price, Double rating, String imageUrl, String language) {
-        this.title = title;
-        this.price = price;
-        this.rating = rating;
-        this.imageUrl = imageUrl;
-        this.language = language ;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-    public String getTitle() {
-        return title;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getLanguage() {
-        return language ;
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

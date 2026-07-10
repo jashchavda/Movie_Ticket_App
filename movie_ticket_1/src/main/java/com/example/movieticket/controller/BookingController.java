@@ -1,87 +1,72 @@
 package com.example.movieticket.controller;
-import com.example.movieticket.model.*;
-import com.example.movieticket.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+
+import com.example.movieticket.dto.request.BookingRequest;
+import com.example.movieticket.dto.request.UpdateBookingRequest;
+import com.example.movieticket.dto.response.BookingResponse;
+import com.example.movieticket.exception.UnauthorizedException;
+import com.example.movieticket.service.BookingService;
+import com.example.movieticket.util.ApiResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookings")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RequiredArgsConstructor
 public class BookingController {
 
-    @Autowired
-    private BookingRepository bookingRepo;
+    private final BookingService bookingService;
 
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private MovieRepository movieRepo;
-
-    @PostMapping
-    public ResponseEntity<?> createBooking(@RequestBody Map<String, Object> body, HttpSession session) {
+    private Long getAuthenticatedUserId(HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new UnauthorizedException("Please log in to continue.");
         }
+        return userId;
+    }
 
-        Long movieId = Long.valueOf(String.valueOf(body.get("movieId")));
-        Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
-        String showTime = (String) body.get("showTime");
+    @PostMapping
+    public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
+            @Valid @RequestBody BookingRequest request,
+            HttpSession session) {
 
-
-        User user = userRepo.findById(userId).get();
-        Movie movie = movieRepo.findById(movieId).get();
-
-        Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setMovie(movie);
-        booking.setSeats(seats);
-        booking.setShowTime(showTime);
-        booking.setTotalPrice(movie.getPrice() * seats);
-
-
-
-
-
-        bookingRepo.save(booking);
-        return ResponseEntity.ok(booking);
+        Long userId = getAuthenticatedUserId(session);
+        BookingResponse booking = bookingService.createBooking(userId, request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Booking confirmed", booking));
     }
 
     @GetMapping
-    public ResponseEntity<?> getBookings(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        User user = userRepo.findById(userId).get();
-        return ResponseEntity.ok(bookingRepo.findByUser(user));
+    public ResponseEntity<ApiResponse<List<BookingResponse>>> getUserBookings(HttpSession session) {
+        Long userId = getAuthenticatedUserId(session);
+        return ResponseEntity.ok(
+                ApiResponse.success("Bookings fetched", bookingService.getUserBookings(userId)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBooking(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        Booking booking = bookingRepo.findById(id).orElse(null);
-        if (booking == null) return ResponseEntity.notFound().build();
-        Integer seats = Integer.valueOf(String.valueOf(body.get("seats")));
-        String showTime = (String) body.get("showTime");
+    public ResponseEntity<ApiResponse<BookingResponse>> updateBooking(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateBookingRequest request,
+            HttpSession session) {
 
-        booking.setSeats(seats);
-        booking.setTotalPrice(booking.getMovie().getPrice() * seats);
-        if (showTime != null && !showTime.isEmpty()) booking.setShowTime(showTime);
-
-
-        bookingRepo.save(booking);
-        return ResponseEntity.ok(booking);
+        Long userId = getAuthenticatedUserId(session);
+        BookingResponse booking = bookingService.updateBooking(id, userId, request);
+        return ResponseEntity.ok(ApiResponse.success("Booking updated", booking));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
-        bookingRepo.deleteById(id);
-        return ResponseEntity.ok("Booking cancelled");
-    }
+    public ResponseEntity<ApiResponse<Void>> cancelBooking(
+            @PathVariable Long id,
+            HttpSession session) {
 
+        Long userId = getAuthenticatedUserId(session);
+        bookingService.cancelBooking(id, userId);
+        return ResponseEntity.ok(ApiResponse.success("Booking cancelled"));
+    }
 }
